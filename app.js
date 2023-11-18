@@ -55,7 +55,6 @@ var _this = this;
 var TryDecorator = function (decorator) {
     var test = new decorator();
     console.log("deco 1=>", test);
-    return;
 };
 var TestDecorator = function () {
     var _classDecorators = [TryDecorator];
@@ -85,6 +84,7 @@ var dummy = [
 ];
 var test = new TestDecorator(dummy, 28);
 // console.log(test.name);
+// ---------------------------------------------------------------------------------
 var TryDeco2 = function (t) {
     return function (decocrator) {
         var n = new decocrator(43, 99);
@@ -121,6 +121,7 @@ var TestDecorator2 = function () {
 }();
 var test2 = new TestDecorator2(23, 30);
 console.log("class extend 2=>", test2);
+// ---------------------------------------------------------------------------------
 // ** param pada decorater flexible
 var LogAccessor = function (target, name, descriptor) {
     console.log("Accessor Decorator");
@@ -173,3 +174,47 @@ var Accessor = function () {
         _a;
 }();
 var acesor = new Accessor();
+// ----------------------------a class in class decorator-----------------------------------------------------
+var classInClass = function () {
+    console.log("berak");
+    return function (originalDeco) {
+        // const original = new originalDeco("uye");
+        // console.log(original);
+        return /** @class */ (function (_super) {
+            __extends(class_1, _super);
+            function class_1() {
+                var _ = [];
+                for (var _i = 0; _i < arguments.length; _i++) {
+                    _[_i] = arguments[_i];
+                }
+                return _super.call(this, "class dalam class") || this;
+            }
+            class_1.prototype.get = function () {
+                console.log(this._try);
+            };
+            return class_1;
+        }(originalDeco));
+    };
+};
+var TestClass = function () {
+    var _classDecorators_2 = [classInClass()];
+    var _classDescriptor_2;
+    var _classExtraInitializers_2 = [];
+    var _classThis_2;
+    var TestClass = _classThis_2 = /** @class */ (function () {
+        function TestClass_1(nama) {
+            this.nama = nama;
+            this._try = "test class in class deco";
+        }
+        return TestClass_1;
+    }());
+    __setFunctionName(_classThis_2, "TestClass");
+    (function () {
+        __esDecorate(null, _classDescriptor_2 = { value: _classThis_2 }, _classDecorators_2, { kind: "class", name: _classThis_2.name }, null, _classExtraInitializers_2);
+        TestClass = _classThis_2 = _classDescriptor_2.value;
+        __runInitializers(_classThis_2, _classExtraInitializers_2);
+    })();
+    return TestClass = _classThis_2;
+}();
+var Testis = new TestClass("bji");
+console.log(Testis);

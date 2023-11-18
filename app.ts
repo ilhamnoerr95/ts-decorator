@@ -1,7 +1,6 @@
 const TryDecorator = (decorator: any) => {
   const test = new decorator();
   console.log("deco 1=>", test);
-  return;
 };
 
 @TryDecorator
@@ -23,6 +22,7 @@ const test = new TestDecorator(dummy, 28);
 
 // console.log(test.name);
 
+// ---------------------------------------------------------------------------------
 const TryDeco2 = <T>(t: T) => {
   return (decocrator: any) => {
     const n = new decocrator(43, 99);
@@ -49,6 +49,8 @@ class TestDecorator2<NumType extends number> extends TestDecorator {
 
 const test2 = new TestDecorator2<number>(23, 30);
 console.log("class extend 2=>", test2);
+
+// ---------------------------------------------------------------------------------
 
 // ** param pada decorater flexible
 const LogAccessor = (
@@ -100,3 +102,33 @@ class Accessor {
 }
 
 const acesor = new Accessor();
+
+// ----------------------------a class in class decorator-----------------------------------------------------
+const classInClass = () => {
+  console.log("berak");
+  return <T extends { new (...args: any[]): { _try: string } }>(
+    originalDeco: T
+  ) => {
+    // const original = new originalDeco("uye");
+    // console.log(original);
+    return class extends originalDeco {
+      constructor(..._: any[]) {
+        super("class dalam class");
+      }
+      get() {
+        console.log(this._try);
+      }
+    };
+  };
+};
+
+@classInClass()
+class TestClass {
+  _try = "test class in class deco";
+
+  constructor(public nama: string) {}
+}
+
+const Testis = new TestClass("bji");
+
+console.log(Testis);
